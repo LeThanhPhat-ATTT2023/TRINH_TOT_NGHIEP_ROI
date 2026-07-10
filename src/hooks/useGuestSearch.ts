@@ -1,3 +1,4 @@
+// src/hooks/useGuestSearch.ts
 import { useEffect, useMemo, useState } from 'react'
 import Fuse from 'fuse.js'
 import { supabase } from '../lib/supabaseClient'
@@ -16,6 +17,7 @@ interface SearchableGuest extends GuestSummary {
 export function useGuestSearch() {
   const [guests, setGuests] = useState<GuestSummary[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   useEffect(() => {
     load()
@@ -23,8 +25,13 @@ export function useGuestSearch() {
 
   async function load() {
     setLoading(true)
-    const { data, error } = await supabase.from('guests').select('id, full_name, salutation')
-    if (!error && data) {
+    setError(false)
+    const { data, error: loadError } = await supabase
+      .from('guests')
+      .select('id, full_name, salutation')
+    if (loadError || !data) {
+      setError(true)
+    } else {
       setGuests(data as GuestSummary[])
     }
     setLoading(false)
@@ -45,5 +52,5 @@ export function useGuestSearch() {
       .map(({ item }) => ({ id: item.id, full_name: item.full_name, salutation: item.salutation }))
   }
 
-  return { search, loading }
+  return { search, loading, error }
 }
