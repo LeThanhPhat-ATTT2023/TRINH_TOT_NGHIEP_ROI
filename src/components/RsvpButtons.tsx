@@ -18,6 +18,7 @@ export function RsvpButtons({ status, submitting, onRespond }: RsvpButtonsProps)
         }`}
         onClick={() => onRespond('attending')}
         disabled={submitting}
+        aria-pressed={status === 'attending'}
       >
         Tôi sẽ tham dự
       </button>
@@ -28,6 +29,7 @@ export function RsvpButtons({ status, submitting, onRespond }: RsvpButtonsProps)
         }`}
         onClick={() => onRespond('not_attending')}
         disabled={submitting}
+        aria-pressed={status === 'not_attending'}
       >
         Xin phép vắng mặt
       </button>
