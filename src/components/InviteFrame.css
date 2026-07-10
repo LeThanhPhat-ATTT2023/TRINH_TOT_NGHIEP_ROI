@@ -1,0 +1,50 @@
+/* src/components/InviteFrame.css */
+.invite-frame {
+  position: relative;
+  max-width: 480px;
+  margin: var(--space-6) auto;
+  background: repeating-linear-gradient(
+    90deg,
+    #fdf0f5 0px,
+    #fdf0f5 20px,
+    #fdf6e3 20px,
+    #fdf6e3 40px
+  );
+  border-left: 2px solid #c0447a;
+  border-right: 2px solid #c0447a;
+}
+
+.invite-frame-scallop {
+  display: block;
+  width: 100%;
+  height: 20px;
+}
+
+.invite-frame-scallop-bottom {
+  transform: rotate(180deg);
+}
+
+.invite-frame-body {
+  position: relative;
+  z-index: 1;
+  background: #faf6e8;
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+}
+
+.invite-frame-sparkle {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  z-index: 2;
+}
+
+.invite-frame-sparkle-top-left {
+  top: 28px;
+  left: 12px;
+}
+
+.invite-frame-sparkle-bottom-right {
+  bottom: 28px;
+  right: 12px;
+}
