@@ -1,0 +1,58 @@
+/* src/components/NameSearchBox.css */
+.name-search-box {
+  max-width: 360px;
+  margin: var(--space-6) auto;
+  position: relative;
+}
+
+.name-search-input {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--color-foreground);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+}
+
+.name-search-input:focus-visible {
+  outline: none;
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 3px rgba(219, 39, 119, 0.25);
+}
+
+.name-search-results {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: #ffffff;
+}
+
+.name-search-results button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+  color: var(--color-foreground);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.name-search-results button:hover {
+  background: var(--color-muted);
+}
+
+.name-search-empty {
+  margin-top: var(--space-2);
+  font-size: 0.85rem;
+  color: var(--color-foreground);
+}
