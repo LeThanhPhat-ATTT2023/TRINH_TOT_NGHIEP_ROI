@@ -52,7 +52,29 @@ describe('AdminEventSettings', () => {
     expect(screen.getByDisplayValue('2026-08-15T09:00')).toBeInTheDocument()
   })
 
-  it('uploads a cover image and saves it into the field', async () => {
+  it('extracts the embed URL when a full <iframe> snippet is pasted into the map field', async () => {
+    const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
+    fromMock.mockImplementation((table: string) => {
+      if (table === 'event_settings') {
+        return createQueryBuilderMock({ data: eventSettings, error: null })
+      }
+      return createQueryBuilderMock({ data: [], error: null })
+    })
+    const user = userEvent.setup()
+
+    renderComponent()
+    await screen.findByDisplayValue('Lễ tốt nghiệp')
+
+    const input = screen.getByLabelText(/Link Google Maps embed/)
+    await user.click(input)
+    await user.paste(
+      '<iframe src="https://www.google.com/maps/embed?pb=!1m18!2sabc" width="600" height="450"></iframe>'
+    )
+
+    expect(input).toHaveValue('https://www.google.com/maps/embed?pb=!1m18!2sabc')
+  })
+
+  it('opens the crop dialog, then uploads the avatar and saves it into the field', async () => {
     const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
     fromMock.mockImplementation((table: string) => {
       if (table === 'event_settings') {
@@ -67,10 +89,14 @@ describe('AdminEventSettings', () => {
     await screen.findByDisplayValue('Lễ tốt nghiệp')
 
     const file = new File(['bytes'], 'cover.jpg', { type: 'image/jpeg' })
-    const input = screen.getByLabelText('Ảnh bìa')
+    const input = screen.getByLabelText('Ảnh đại diện')
     await user.upload(input, file)
 
-    await waitFor(() => expect(screen.getByAltText('Ảnh bìa')).toHaveAttribute(
+    // Chọn file xong phải hiện khung cắt ảnh trước, chưa upload ngay
+    expect(uploadImage).not.toHaveBeenCalled()
+    await user.click(await screen.findByRole('button', { name: 'Dùng ảnh này' }))
+
+    await waitFor(() => expect(screen.getByAltText('Ảnh đại diện')).toHaveAttribute(
       'src',
       'https://res.cloudinary.com/demo/cover.jpg'
     ))

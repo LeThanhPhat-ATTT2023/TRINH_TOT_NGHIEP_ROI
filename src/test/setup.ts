@@ -21,3 +21,19 @@ vi.stubEnv('VITE_CLOUDINARY_UPLOAD_PRESET', 'test-preset')
 // non-secret placeholder values here so module load succeeds.
 vi.stubEnv('VITE_SUPABASE_URL', 'http://localhost:54321')
 vi.stubEnv('VITE_SUPABASE_ANON_KEY', 'test-anon-key')
+// jsdom does not have window.matchMedia; motion (useReducedMotion) calls it
+// when a component mounts so tests would crash without this polyfill.
+// Always returns matches: false (reduced-motion off in tests).
+if (typeof window !== 'undefined' && !window.matchMedia) {
+  window.matchMedia = (query: string) =>
+    ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(() => false),
+    }) as unknown as MediaQueryList
+}

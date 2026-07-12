@@ -19,7 +19,7 @@ import { NameSearchBox } from './NameSearchBox'
 const mockedUseGuestSearch = useGuestSearch as unknown as ReturnType<typeof vi.fn>
 
 describe('NameSearchBox', () => {
-  it('shows matching suggestions and navigates to the invite page on click', async () => {
+  it('shows matching suggestions and navigates to the shared invite page on click', async () => {
     mockedUseGuestSearch.mockReturnValue({
       search: (query: string) =>
         query === 'Trần' ? [{ id: '2', full_name: 'Trần Thị B', salutation: 'Chị' }] : [],
@@ -37,7 +37,7 @@ describe('NameSearchBox', () => {
     await user.type(screen.getByPlaceholderText('Nhập tên của bạn...'), 'Trần')
     await user.click(screen.getByRole('button', { name: 'Chị Trần Thị B' }))
 
-    expect(navigateMock).toHaveBeenCalledWith('/thiep/2')
+    expect(navigateMock).toHaveBeenCalledWith('/thiep-chung/2')
   })
 
   it('shows a not-found message when nothing matches', async () => {

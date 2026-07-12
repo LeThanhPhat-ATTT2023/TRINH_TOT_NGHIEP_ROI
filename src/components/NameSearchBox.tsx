@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGuestSearch } from '../hooks/useGuestSearch'
+import { SearchIcon } from './icons'
 import './NameSearchBox.css'
 
 export function NameSearchBox() {
@@ -14,13 +15,16 @@ export function NameSearchBox() {
 
   return (
     <div className="name-search-box">
-      <input
-        className="name-search-input"
-        type="text"
-        placeholder="Nhập tên của bạn..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
+      <div className="name-search-input-wrapper">
+        <SearchIcon className="name-search-icon" />
+        <input
+          className="name-search-input"
+          type="text"
+          placeholder="Nhập tên của bạn..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
       {error && (
         <p className="name-search-error" role="alert">
           Không tải được danh sách khách mời.{' '}
@@ -33,7 +37,7 @@ export function NameSearchBox() {
         <ul className="name-search-results">
           {results.map((guest) => (
             <li key={guest.id}>
-              <button type="button" onClick={() => navigate(`/thiep/${guest.id}`)}>
+              <button type="button" onClick={() => navigate(`/thiep-chung/${guest.id}`)}>
                 {guest.salutation ? `${guest.salutation} ` : ''}
                 {guest.full_name}
               </button>

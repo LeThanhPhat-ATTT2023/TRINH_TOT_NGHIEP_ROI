@@ -14,8 +14,11 @@
 
 .admin-cover-preview {
   display: block;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
   border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
+  border: 3px solid var(--color-border);
   margin-bottom: var(--space-4);
 }
 

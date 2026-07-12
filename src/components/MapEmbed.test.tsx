@@ -16,4 +16,10 @@ describe('MapEmbed', () => {
     const { container } = render(<MapEmbed mapEmbedUrl={null} />)
     expect(container).toBeEmptyDOMElement()
   })
+
+  it('renders a placeholder instead of an iframe when the url is not a valid Google Maps embed link', () => {
+    render(<MapEmbed mapEmbedUrl="/not-a-real-map" />)
+    expect(screen.queryByTitle('Bản đồ vị trí sự kiện')).not.toBeInTheDocument()
+    expect(screen.getByText('Bản đồ vị trí sẽ được cập nhật sớm.')).toBeInTheDocument()
+  })
 })

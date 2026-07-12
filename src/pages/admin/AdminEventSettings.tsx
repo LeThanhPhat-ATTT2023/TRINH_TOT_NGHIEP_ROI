@@ -4,6 +4,7 @@ import type { ChangeEvent, FormEvent } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { uploadImage } from '../../lib/cloudinary'
 import type { EventSettings, GalleryPhoto } from '../../types/database'
+import { AvatarCropModal } from '../../components/AvatarCropModal'
 import '../../styles/admin-shared.css'
 import './AdminEventSettings.css'
 
@@ -24,6 +25,12 @@ function fromDatetimeLocalValue(value: string): string | null {
   return date.toISOString()
 }
 
+// Cho phép dán nguyên đoạn mã <iframe ...> từ Google Maps: tự bóc URL trong src="..."
+function extractMapEmbedUrl(value: string): string {
+  const match = value.match(/src="([^"]+)"/)
+  return match ? match[1] : value
+}
+
 export function AdminEventSettings() {
   const [settings, setSettings] = useState<EventSettings | null>(null)
   const [gallery, setGallery] = useState<GalleryPhoto[]>([])
@@ -32,6 +39,7 @@ export function AdminEventSettings() {
   const [error, setError] = useState<string | null>(null)
   const [uploadingCover, setUploadingCover] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
+  const [coverCropFile, setCoverCropFile] = useState<File | null>(null)
 
   useEffect(() => {
     loadAll()
@@ -81,15 +89,22 @@ export function AdminEventSettings() {
     setSaving(false)
   }
 
-  async function handleCoverUpload(e: ChangeEvent<HTMLInputElement>) {
+  function handleCoverSelect(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
+    // Cho phép chọn lại cùng một file sau khi huỷ
+    e.target.value = ''
     if (!file) return
+    setCoverCropFile(file)
+  }
+
+  async function handleCoverCropped(file: File) {
+    setCoverCropFile(null)
     setUploadingCover(true)
     try {
       const url = await uploadImage(file)
       updateField('cover_image_url', url)
     } catch {
-      setError('Tải ảnh bìa thất bại.')
+      setError('Tải ảnh đại diện thất bại.')
     } finally {
       setUploadingCover(false)
     }
@@ -163,23 +178,24 @@ export function AdminEventSettings() {
           />
         </label>
         <label className="admin-field">
-          Link Google Maps embed
+          Link Google Maps embed (dán URL hoặc nguyên mã &lt;iframe&gt; đều được)
           <input
             value={settings.map_embed_url ?? ''}
-            onChange={(e) => updateField('map_embed_url', e.target.value)}
+            onChange={(e) => updateField('map_embed_url', extractMapEmbedUrl(e.target.value))}
           />
         </label>
         <label className="admin-field">
-          Ảnh bìa
-          <input type="file" accept="image/*" onChange={handleCoverUpload} />
+          Ảnh đại diện
+          <input type="file" accept="image/*" onChange={handleCoverSelect} />
         </label>
-        {uploadingCover && <p className="admin-upload-status">Đang tải ảnh bìa...</p>}
+        {uploadingCover && <p className="admin-upload-status">Đang tải ảnh đại diện...</p>}
         {settings.cover_image_url && (
           <img
             className="admin-cover-preview"
             src={settings.cover_image_url}
-            alt="Ảnh bìa"
-            width={200}
+            alt="Ảnh đại diện"
+            width={120}
+            height={120}
           />
         )}
         {error && (
@@ -215,6 +231,14 @@ export function AdminEventSettings() {
           ))}
         </ul>
       </div>
+
+      {coverCropFile && (
+        <AvatarCropModal
+          file={coverCropFile}
+          onCancel={() => setCoverCropFile(null)}
+          onConfirm={handleCoverCropped}
+        />
+      )}
     </>
   )
 }

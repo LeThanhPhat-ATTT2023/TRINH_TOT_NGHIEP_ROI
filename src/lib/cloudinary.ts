@@ -21,5 +21,8 @@ export async function uploadImage(file: File): Promise<string> {
   }
 
   const data = await response.json()
-  return data.secure_url as string
+  const url = data.secure_url as string
+  // Ảnh nguồn có thể là định dạng trình duyệt không hiển thị được (HEIC từ iPhone...).
+  // Chèn f_auto,q_auto để Cloudinary luôn trả về định dạng web hiển thị được.
+  return url.replace('/upload/', '/upload/f_auto,q_auto/')
 }

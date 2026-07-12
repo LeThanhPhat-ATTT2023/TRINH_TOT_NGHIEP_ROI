@@ -1,14 +1,29 @@
 /* src/components/NameSearchBox.css */
 .name-search-box {
   max-width: 360px;
-  margin: var(--space-6) auto;
+  margin: 0 auto;
   position: relative;
+}
+
+.name-search-input-wrapper {
+  position: relative;
+}
+
+.name-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  width: 18px;
+  height: 18px;
+  transform: translateY(-50%);
+  color: var(--color-secondary);
+  pointer-events: none;
 }
 
 .name-search-input {
   display: block;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 1rem 0.6rem 2.6rem;
   font-size: 1rem;
   font-family: var(--font-body);
   color: var(--color-foreground);

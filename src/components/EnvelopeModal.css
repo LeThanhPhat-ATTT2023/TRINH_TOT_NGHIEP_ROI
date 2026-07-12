@@ -1,0 +1,277 @@
+﻿/* src/components/EnvelopeModal.css */
+
+.envelope-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.55);
+  padding: var(--space-4);
+}
+
+.envelope-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Container reserves space above for card to slide into */
+.envelope-container {
+  position: relative;
+  width: min(340px, 90vw);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Total height = envelope + slide space */
+  padding-top: 80%;
+}
+
+/* ── Envelope body (pink pocket) ── */
+.envelope-body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Envelope is 5:3 aspect → height = 60% of width */
+  height: 60%;
+  background: #fbcfe8;
+  border-radius: 12px;
+  overflow: visible;
+  box-shadow: 0 20px 50px -16px rgba(146, 46, 92, 0.5);
+  z-index: 3;
+}
+
+.envelope-back {
+  position: absolute;
+  inset: 0;
+  background: #f3a8d0;
+  border-radius: 12px;
+}
+
+.envelope-fold {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: #f9bedf;
+  clip-path: polygon(0 100%, 50% 20%, 100% 100%);
+  z-index: 1;
+}
+
+.envelope-sparkle {
+  position: absolute;
+  color: #edb427;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.envelope-sparkle-1 {
+  top: 8px;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+}
+
+.envelope-sparkle-2 {
+  bottom: 10px;
+  right: 10px;
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Flap ── 
+   Same dimensions as body, positioned over the top opening.
+   Rotates BACKWARD (away from viewer) when opened.
+*/
+.envelope-flap-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60%;
+  z-index: 4;
+  pointer-events: none;
+  perspective: 1200px;
+}
+
+.envelope-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 55%;
+  background: #f472b6;
+  clip-path: polygon(0 0, 50% 100%, 100% 0);
+  transform-origin: top center;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.envelope-container[data-state="opening"] .envelope-flap,
+.envelope-container[data-state="sliding"] .envelope-flap {
+  transform: rotateX(180deg);
+}
+
+/* ── Wax seal ── */
+.envelope-seal {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.envelope-seal-circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #faf6e8;
+  border: 3px solid #f0e3c0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.envelope-container[data-state="opening"] .envelope-seal-circle,
+.envelope-container[data-state="sliding"] .envelope-seal-circle {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1.4);
+}
+
+.envelope-seal-icon {
+  width: 26px;
+  height: 26px;
+  color: #7f1d1d;
+}
+
+/* ── Letter card INSIDE envelope ──
+   Sits BEHIND body (z:2 < z:3).
+   Initially: top edge hidden just below envelope opening (top ~10% of body).
+   Transform Y=0 means its bottom aligns with container bottom, 
+   and it's tall enough that only a small peek shows above body top.
+*/
+.envelope-card-inside {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  /* Start position: bottom of card at bottom of container */
+  bottom: 0;
+  /* Card is slightly taller than envelope body so it can slide up */
+  height: 75%;
+  z-index: 2;
+  transform: translateY(0);
+}
+
+.envelope-container[data-state="envelope"] .envelope-card-inside,
+.envelope-container[data-state="opening"] .envelope-card-inside {
+  transform: translateY(0);
+  transition: none;
+}
+
+.envelope-container[data-state="sliding"] .envelope-card-inside {
+  transform: translateY(-85%);
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.envelope-card-preview {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #fffdf7 0%, #fef9ee 100%);
+  border-radius: 8px 8px 4px 4px;
+  border: 2px solid #f0e3c0;
+  box-shadow: 0 -4px 20px -6px rgba(146, 46, 92, 0.25);
+}
+
+.envelope-hint {
+  margin-top: var(--space-3);
+  font-size: 0.9rem;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  text-align: center;
+}
+
+.envelope-close {
+  position: absolute;
+  top: var(--space-3);
+  right: var(--space-3);
+  z-index: 1001;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.envelope-close:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.envelope-card-wrapper {
+  width: min(420px, 95vw);
+  max-height: 85dvh;
+  overflow-y: auto;
+}
+
+.envelope-error {
+  text-align: center;
+  color: #fff;
+  padding: var(--space-6);
+}
+
+.envelope-error p {
+  margin: 0 0 var(--space-3);
+}
+
+.envelope-retry {
+  padding: 0.5rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.envelope-loading {
+  text-align: center;
+  color: #fff;
+  padding: var(--space-6);
+}
+
+/* ── Complete state ── */
+.envelope-complete {
+  text-align: center;
+  padding: var(--space-6);
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 50px -16px rgba(146, 46, 92, 0.4);
+}
+
+.envelope-complete-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+}

@@ -1,50 +1,82 @@
 /* src/components/InviteFrame.css */
+
+/* Outer striped mat, like the pink/cream striped background of the mock */
 .invite-frame {
   position: relative;
-  max-width: 480px;
-  margin: var(--space-6) auto;
+  width: 100%;
+  max-width: 520px;
+  min-width: 0;
+  box-sizing: border-box;
+  margin: auto;
+  padding: 18px;
   background: repeating-linear-gradient(
     90deg,
-    #fdf0f5 0px,
-    #fdf0f5 20px,
-    #fdf6e3 20px,
-    #fdf6e3 40px
+    #f6c1da 0px,
+    #f6c1da 26px,
+    #faf0ce 26px,
+    #faf0ce 52px
   );
-  border-left: 2px solid #c0447a;
-  border-right: 2px solid #c0447a;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 24px 48px -28px rgba(192, 68, 122, 0.5);
 }
 
-.invite-frame-scallop {
-  display: block;
-  width: 100%;
-  height: 20px;
+/*
+ * Cream card. The wavy maroon border is one continuous SVG path drawn to
+ * the card's exact measured size (see InviteFrame.tsx), so it can never
+ * split apart at corners. The plain background/border below is only a
+ * fallback for environments without ResizeObserver.
+ */
+.invite-frame-card {
+  position: relative;
+  background: #faf6e8;
+  border: 2.5px solid #c0447a;
+  border-radius: 24px;
 }
 
-.invite-frame-scallop-bottom {
-  transform: rotate(180deg);
+/* Once the SVG wave renders, it supplies both the fill and the border. */
+.invite-frame-card-wave {
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.invite-frame-wave {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
 .invite-frame-body {
   position: relative;
   z-index: 1;
-  background: #faf6e8;
-  padding: var(--space-8) var(--space-6);
+  padding: 24px 38px;
   text-align: center;
 }
 
 .invite-frame-sparkle {
   position: absolute;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   z-index: 2;
 }
 
 .invite-frame-sparkle-top-left {
-  top: 28px;
-  left: 12px;
+  top: 22px;
+  left: 22px;
 }
 
 .invite-frame-sparkle-bottom-right {
-  bottom: 28px;
-  right: 12px;
+  bottom: 22px;
+  right: 22px;
+}
+
+/* Slimmer mat so the card fits small phone screens */
+@media (max-width: 480px) {
+  .invite-frame {
+    padding: 14px;
+  }
+
+  .invite-frame-body {
+    padding: 22px 30px;
+  }
 }

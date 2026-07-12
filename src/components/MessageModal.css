@@ -1,0 +1,109 @@
+﻿/* src/components/MessageModal.css */
+
+.message-modal {
+  width: min(420px, 92vw);
+  max-height: 85dvh;
+  overflow-y: auto;
+}
+
+.message-modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: var(--space-6);
+  box-shadow: 0 20px 50px -16px rgba(146, 46, 92, 0.4);
+}
+
+.message-modal-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin: 0 0 var(--space-2);
+  text-align: center;
+}
+
+.message-modal-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-foreground);
+  opacity: 0.8;
+  margin: 0 0 var(--space-5);
+  text-align: center;
+}
+
+.message-modal-textarea {
+  width: 100%;
+  padding: var(--space-3);
+  border: 2px solid #f0e3c0;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-foreground);
+  background: #faf6e8;
+  resize: vertical;
+  min-height: 100px;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.message-modal-textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.message-modal-textarea:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.message-modal-char-count {
+  font-size: 0.8rem;
+  color: var(--color-foreground);
+  opacity: 0.6;
+  text-align: right;
+  margin-top: var(--space-1);
+}
+
+.message-modal-actions {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+
+.message-modal-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 999px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.message-modal-btn-skip {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.message-modal-btn-skip:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.message-modal-btn-submit {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  box-shadow: 0 8px 16px -10px rgba(146, 46, 92, 0.6);
+}
+
+.message-modal-btn-submit:hover:not(:disabled) {
+  background: #be185d;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 20px -10px rgba(146, 46, 92, 0.7);
+}
+
+.message-modal-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}

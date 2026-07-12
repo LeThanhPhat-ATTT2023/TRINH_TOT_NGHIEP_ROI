@@ -1,0 +1,39 @@
+// src/pages/HomePage.test.tsx
+import { render, screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
+
+vi.mock('../components/NameSearchBox', () => ({
+  NameSearchBox: () => <div>NameSearchBox stub</div>,
+}))
+
+import { HomePage } from './HomePage'
+
+describe('HomePage', () => {
+  it('shows the Happy Graduation heading with the host name', () => {
+    render(<HomePage />)
+
+    expect(screen.getByText('Happy')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Graduation' })).toBeInTheDocument()
+    expect(screen.getByText('Ngọc Trinh')).toBeInTheDocument()
+  })
+
+  it('shows the guest name search below the heading', () => {
+    render(<HomePage />)
+
+    expect(
+      screen.getByText('Tìm tên của bạn trong danh sách khách mời')
+    ).toBeInTheDocument()
+    expect(screen.getByText('NameSearchBox stub')).toBeInTheDocument()
+  })
+
+  it('shows the thank-you message inviting guests to enter their name', () => {
+    render(<HomePage />)
+
+    expect(
+      screen.getByText(/Cảm ơn vì đã là một phần rực rỡ/)
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText(/Nhập tên để cùng mở ra tấm vé/)
+    ).toBeInTheDocument()
+  })
+})

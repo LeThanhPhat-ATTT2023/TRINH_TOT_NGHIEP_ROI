@@ -1,4 +1,4 @@
-// src/types/database.ts
+﻿// src/types/database.ts
 export type RsvpStatus = 'pending' | 'attending' | 'not_attending'
 
 export interface Guest {
@@ -6,6 +6,7 @@ export interface Guest {
   full_name: string
   salutation: string | null
   greeting_message: string | null
+  message_by_guest: string | null
   rsvp_status: RsvpStatus
   rsvp_responded_at: string | null
   created_at: string
@@ -29,3 +30,4 @@ export interface GalleryPhoto {
   sort_order: number
   created_at: string
 }
+

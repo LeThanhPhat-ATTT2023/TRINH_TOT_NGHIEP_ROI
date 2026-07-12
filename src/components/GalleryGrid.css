@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-3);
-  margin: var(--space-6) 0;
+  margin: 0;
 }
 
 .gallery-grid img {

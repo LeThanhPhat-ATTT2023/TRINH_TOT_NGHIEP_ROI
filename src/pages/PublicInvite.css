@@ -1,25 +1,159 @@
-/* src/pages/PublicInvite.css */
+﻿/* src/pages/PublicInvite.css */
 .public-invite-page {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-6);
-  text-align: center;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--color-background);
   font-family: var(--font-body);
+  overflow-x: clip;
 }
 
-.public-invite-cover {
+@media (max-width: 480px) {
+  .public-invite-page {
+    padding: var(--space-3);
+  }
+}
+
+/* --- Host photo feature: tilted polaroid + name tags + hand-drawn arrows --- */
+.public-invite-photo {
+  position: relative;
+  padding: 12px 0 8px;
+}
+
+/* Anchor box sized exactly to the polaroid: arrows/tags position off the photo itself */
+.public-invite-photo-anchor {
+  position: relative;
+  display: inline-block;
+  width: min(200px, 60%);
+}
+
+.public-invite-photo-frame {
   width: 100%;
-  max-height: 320px;
+  background: #f6f1bd;
+  padding: 10px 10px 30px;
+  border-radius: 6px;
+  box-shadow: 0 18px 30px -16px rgba(192, 68, 122, 0.45);
+  transform: rotate(-3deg);
+  box-sizing: border-box;
+}
+
+.public-invite-photo-frame img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-6);
+  border-radius: 2px;
+}
+
+.public-invite-photo-tag {
+  position: absolute;
+  padding: 0.35rem 0.75rem;
+  background: #cd7fa5;
+  color: #fff7fb;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px -10px rgba(146, 46, 92, 0.6);
+  white-space: nowrap;
+}
+
+/* Name tag sits level with the photo's top-right corner, overlapping the polaroid edge */
+.public-invite-photo-tag-name {
+  top: -10px;
+  left: calc(100% - 24px);
+}
+
+.public-invite-photo-arrow {
+  position: absolute;
+  width: 40px;
+  height: 28px;
+  color: #c0447a;
+}
+
+/* Tail starts ON the photo, the curl exits its top-right edge toward the name tag */
+.public-invite-photo-arrow-name {
+  top: 16px;
+  left: calc(100% - 26px);
+  transform: rotate(-50deg);
+}
+
+.public-invite-photo-sparkle {
+  position: absolute;
+  color: #edb427;
+}
+
+.public-invite-photo-sparkle-1 {
+  top: 8px;
+  left: 14%;
+  width: 22px;
+  height: 22px;
+}
+
+.public-invite-photo-sparkle-2 {
+  top: 46%;
+  left: 4%;
+  width: 14px;
+  height: 14px;
+}
+
+.public-invite-photo-sparkle-3 {
+  bottom: 24%;
+  right: 6%;
+  width: 18px;
+  height: 18px;
+}
+
+.public-invite-header {
+  padding-bottom: 0;
+}
+
+.public-invite-eyebrow {
+  margin: 0 0 var(--space-1);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
 }
 
 .public-invite-title {
-  font-family: var(--font-display);
-  font-size: 2.25rem;
+  font-family: var(--font-script);
+  font-size: 2.6rem;
+  line-height: 1.4;
+  letter-spacing: 0.05em;
   color: var(--color-foreground);
-  margin: 0 0 var(--space-2);
+  margin: 0;
+}
+
+/* Even rhythm: 12px above and below every divider */
+.public-invite-section {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.public-invite-venue-line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-3);
+  text-align: left;
+}
+
+.public-invite-venue-map .map-embed,
+.public-invite-venue-map .map-embed-placeholder {
+  margin-top: var(--space-4);
+}
+
+.public-invite-venue-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  margin-top: 0.15rem;
+  color: var(--color-primary);
 }
 
 .public-invite-venue {
@@ -30,5 +164,80 @@
 
 .public-invite-address {
   color: var(--color-foreground);
-  margin: 0 0 var(--space-4);
+  opacity: 0.8;
+  margin: 4px 0 0;
 }
+
+/* Khá»‘i Ä‘á»‹a Ä‘iá»ƒm + giá» háº¹n: tá»± co theo cá»¥m rá»™ng nháº¥t (tÃªn Ä‘á»‹a Ä‘iá»ƒm) vÃ  cÄƒn
+   giá»¯a thiá»‡p; hÃ ng giá»/ngÃ y bÃªn trong tráº£i Ä‘Ãºng báº±ng bá» rá»™ng khá»‘i */
+.public-invite-venue-block {
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* [icon Ä‘á»“ng há»“ + giá»] dÃ­nh mÃ©p trÃ¡i â€” [icon lá»‹ch + ngÃ y] dÃ­nh mÃ©p pháº£i */
+.public-invite-time {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-3);
+}
+
+.public-invite-time-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.public-invite-time-icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--color-primary);
+}
+
+.public-invite-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.6rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+  border-radius: 999px;
+  box-shadow: 0 10px 20px -12px rgba(146, 46, 92, 0.7);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.public-invite-cta:hover {
+  background: #be185d;
+}
+
+/* Mobile overrides â€” must stay at the end of the file to win the cascade */
+@media (max-width: 480px) {
+  .public-invite-photo-tag {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .public-invite-photo-arrow {
+    width: 32px;
+    height: 22px;
+  }
+
+  .public-invite-photo-tag-name {
+    top: -8px;
+    left: calc(100% - 30px);
+  }
+
+  .public-invite-photo-arrow-name {
+    top: 14px;
+    left: calc(100% - 24px);
+  }
+}
+

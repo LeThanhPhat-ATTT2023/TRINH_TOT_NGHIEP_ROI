@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@400;600;700&family=Great+Vibes&family=Inter:wght@400;500;600&display=swap');
 
 :root {
   --color-primary: #db2777;
@@ -13,6 +13,7 @@
   --color-ring: #db2777;
 
   --font-display: 'Cormorant Infant', 'Georgia', serif;
+  --font-script: 'Great Vibes', 'Brush Script MT', cursive;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
 
   --space-2: 8px;

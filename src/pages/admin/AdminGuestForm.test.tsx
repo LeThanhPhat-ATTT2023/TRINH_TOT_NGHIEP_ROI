@@ -1,4 +1,4 @@
-// src/pages/admin/AdminGuestForm.test.tsx
+﻿// src/pages/admin/AdminGuestForm.test.tsx
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
@@ -27,8 +27,8 @@ describe('AdminGuestForm', () => {
 
     render(<AdminGuestForm guestId={null} onClose={onClose} onSaved={onSaved} />)
 
-    await user.type(screen.getByLabelText('Tên khách'), 'Lê Văn C')
-    await user.click(screen.getByRole('button', { name: 'Lưu' }))
+    await user.type(screen.getByLabelText('TÃªn khÃ¡ch'), 'LÃª VÄƒn C')
+    await user.click(screen.getByRole('button', { name: 'LÆ°u' }))
 
     await waitFor(() => expect(onSaved).toHaveBeenCalledTimes(1))
     expect(fromMock).toHaveBeenCalledWith('guests')
@@ -40,9 +40,10 @@ describe('AdminGuestForm', () => {
       createQueryBuilderMock({
         data: {
           id: '1',
-          full_name: 'Nguyễn Văn A',
+          full_name: 'Nguyá»…n VÄƒn A',
           salutation: 'Anh',
-          greeting_message: 'Chúc mừng nhé!',
+          greeting_message: 'ChÃºc má»«ng nhÃ©!',
+  message_by_guest: null,
           rsvp_status: 'pending',
           rsvp_responded_at: null,
           created_at: '2026-01-01T00:00:00Z',
@@ -54,18 +55,19 @@ describe('AdminGuestForm', () => {
 
     render(<AdminGuestForm guestId="1" onClose={onClose} onSaved={onSaved} />)
 
-    expect(await screen.findByDisplayValue('Nguyễn Văn A')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('Chúc mừng nhé!')).toBeInTheDocument()
+    expect(await screen.findByDisplayValue('Nguyá»…n VÄƒn A')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('ChÃºc má»«ng nhÃ©!')).toBeInTheDocument()
   })
 
-  it('calls onClose when Huỷ is clicked', async () => {
+  it('calls onClose when Huá»· is clicked', async () => {
     const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
     fromMock.mockReturnValue(createQueryBuilderMock({ data: null, error: null }))
     const user = userEvent.setup()
 
     render(<AdminGuestForm guestId={null} onClose={onClose} onSaved={onSaved} />)
-    await user.click(screen.getByRole('button', { name: 'Huỷ' }))
+    await user.click(screen.getByRole('button', { name: 'Huá»·' }))
 
     expect(onClose).toHaveBeenCalledTimes(1)
   })
 })
+

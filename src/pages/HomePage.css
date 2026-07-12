@@ -1,0 +1,172 @@
+/* src/pages/HomePage.css */
+.home-page {
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--color-background);
+  font-family: var(--font-body);
+  overflow-x: clip;
+}
+
+@media (max-width: 480px) {
+  .home-page {
+    padding: var(--space-3);
+  }
+}
+
+/* Trang chủ: khung trải theo chiều cao màn hình thay vì co theo nội dung.
+   Chỉ override tại đây — các trang khác vẫn để khung ôm nội dung. */
+.home-page .invite-frame {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100dvh - 2 * var(--space-4));
+}
+
+.home-page .invite-frame-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bố cục theo mockup: hero ghim trên cùng, khối tìm tên ở trung tâm thiệp
+   (hai vùng co giãn bằng nhau trên/dưới), lời nhắn nổi giữa vùng trống trên */
+.home-page .invite-frame-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* Vùng trống dưới cùng — đối trọng với vùng lời nhắn để khối tìm tên nằm giữa */
+.home-page .invite-frame-body::after {
+  content: '';
+  flex: 1 1 0;
+}
+
+@media (max-width: 480px) {
+  .home-page .invite-frame {
+    min-height: calc(100dvh - 2 * var(--space-3));
+  }
+}
+
+/* --- Cụm chữ kiểu banner: pill "Happy" → script "Graduation" → pill tên --- */
+.home-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-4) 0 var(--space-2);
+}
+
+.home-hero-pill {
+  position: relative;
+  z-index: 1;
+  padding: 0.4rem 1.1rem;
+  background: #cd7fa5;
+  color: #fff7fb;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 999px;
+  box-shadow: 0 8px 16px -10px rgba(146, 46, 92, 0.6);
+  white-space: nowrap;
+}
+
+/* Pill "Happy" nhỏ hơn pill tên (như mẫu), lọt vào khoảng trống giữa chữ "r"
+   và nét móc chữ "d" của "Graduation" — ngay trên chữ "a" */
+.home-hero-pill-happy {
+  margin-bottom: -2.4rem;
+  padding: 0.3rem 0.85rem;
+  font-size: 0.9rem;
+  transform: translateX(-3.6rem);
+}
+
+.home-hero-pill-name {
+  margin-top: -1.1rem;
+  font-size: 1.3rem;
+  transform: translateX(2.6rem);
+  background: var(--color-primary);
+
+}
+
+.home-hero-title {
+  margin: 0;
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(3.4rem, 16vw, 5rem);
+  line-height: 1.2;
+  letter-spacing: 0.05em;
+  color: var(--color-foreground);
+}
+
+.home-hero-sparkle {
+  position: absolute;
+  color: #edb427;
+}
+
+.home-hero-sparkle-1 {
+  top: 6px;
+  right: 10%;
+  width: 20px;
+  height: 20px;
+}
+
+.home-hero-sparkle-2 {
+  bottom: 14px;
+  left: 7%;
+  width: 14px;
+  height: 14px;
+}
+
+/* Vùng co giãn giữa hero và khối tìm tên; lời nhắn luôn ở chính giữa vùng */
+.home-message-zone {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4) 0;
+}
+
+.home-message {
+  margin: 0 auto;
+  max-width: 36ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-foreground);
+  opacity: 0.85;
+}
+
+.home-search-section {
+  margin: 0;
+  padding-top: var(--space-4);
+  padding-bottom: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.home-search-label {
+  margin: 0 0 var(--space-2);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+@media (max-width: 480px) {
+  .home-hero-pill {
+    font-size: 0.9rem;
+    padding: 0.35rem 0.9rem;
+  }
+
+  .home-hero-pill-happy {
+    margin-bottom: -1.4rem;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.8rem;
+    transform: translateX(-2.5rem);
+  }
+
+  .home-hero-pill-name {
+    font-size: 1.15rem;
+    transform: translateX(1.9rem);
+  }
+}

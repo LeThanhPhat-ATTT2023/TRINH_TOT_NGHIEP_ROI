@@ -1,11 +1,19 @@
 /* src/pages/GuestInvite.css */
 .guest-invite-page {
   min-height: 100dvh;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: var(--space-6);
-  background: radial-gradient(circle at top, var(--color-secondary) 0%, var(--color-background) 60%);
+  background: var(--color-background);
+  overflow-x: clip;
+}
+
+@media (max-width: 480px) {
+  .guest-invite-page {
+    padding: var(--space-3);
+  }
 }
 
 .guest-invite-greeting {
