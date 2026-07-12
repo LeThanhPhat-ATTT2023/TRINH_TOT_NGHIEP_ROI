@@ -80,13 +80,13 @@ export function EnvelopeModal({ guestId, eventSettings, onClose }: EnvelopeModal
     if (!error) {
       setViewState('complete')
       // Auto close after 2 seconds
-      setTimeout(() => onClose(), 2000)
+      setTimeout(() => onClose(), 10000)
     }
   }
 
   function handleMessageSkip() {
     setViewState('complete')
-    setTimeout(() => onClose(), 1500)
+    setTimeout(() => onClose(), 10000)
   }
 
   const salutation = guest?.salutation ? `${guest.salutation} ` : ''

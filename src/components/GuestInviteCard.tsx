@@ -12,7 +12,7 @@ export interface GuestInviteCardProps {
   onRespond: (status: 'attending' | 'not_attending') => void
 }
 
-export function GuestInviteCard({ guest, eventSettings, submitting, rsvpError, onRespond }: GuestInviteCardProps) {
+export function GuestInviteCard({ guest, submitting, rsvpError, onRespond }: GuestInviteCardProps) {
   return (
     <InviteFrame>
       <p className="guest-invite-greeting">
@@ -21,13 +21,6 @@ export function GuestInviteCard({ guest, eventSettings, submitting, rsvpError, o
       </p>
       {guest.greeting_message && (
         <p className="guest-invite-message">{guest.greeting_message}</p>
-      )}
-      {eventSettings && (
-        <div className="guest-invite-event-info">
-          {eventSettings.event_name && <p>{eventSettings.event_name}</p>}
-          {eventSettings.venue_name && <p>{eventSettings.venue_name}</p>}
-          {eventSettings.venue_address && <p>{eventSettings.venue_address}</p>}
-        </div>
       )}
       <RsvpButtons status={guest.rsvp_status} submitting={submitting} onRespond={onRespond} />
       {rsvpError && (
