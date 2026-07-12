@@ -20,7 +20,7 @@ import { AdminDashboard } from './AdminDashboard'
 const guests: Guest[] = [
   {
     id: '1',
-    full_name: 'Nguyá»…n VÄƒn A',
+    full_name: 'Nguyễn Văn A',
     salutation: 'Anh',
     greeting_message: null,
   message_by_guest: null,
@@ -31,8 +31,8 @@ const guests: Guest[] = [
   },
   {
     id: '2',
-    full_name: 'Tráº§n Thá»‹ B',
-    salutation: 'Chá»‹',
+    full_name: 'Trần Thị B',
+    salutation: 'Chị',
     greeting_message: null,
   message_by_guest: null,
   rsvp_status: 'pending',
@@ -62,10 +62,10 @@ describe('AdminDashboard', () => {
 
     renderDashboard()
 
-    expect(await screen.findByText('Nguyá»…n VÄƒn A')).toBeInTheDocument()
-    expect(screen.getByText('Tráº§n Thá»‹ B')).toBeInTheDocument()
-    expect(screen.getByText('Tá»•ng sá»‘: 2')).toBeInTheDocument()
-    expect(screen.getByText('ÄÃ£ xÃ¡c nháº­n: 1')).toBeInTheDocument()
+    expect(await screen.findByText('Nguyễn Văn A')).toBeInTheDocument()
+    expect(screen.getByText('Trần Thị B')).toBeInTheDocument()
+    expect(screen.getByText('Tổng số: 2')).toBeInTheDocument()
+    expect(screen.getByText('Đã xác nhận: 1')).toBeInTheDocument()
   })
 
   it('filters guests by the search box', async () => {
@@ -74,11 +74,11 @@ describe('AdminDashboard', () => {
 
     renderDashboard()
 
-    await screen.findByText('Nguyá»…n VÄƒn A')
-    await user.type(screen.getByPlaceholderText('TÃ¬m theo tÃªn...'), 'Tráº§n')
+    await screen.findByText('Nguyễn Văn A')
+    await user.type(screen.getByPlaceholderText('Tìm theo tên...'), 'Trần')
 
-    expect(screen.queryByText('Nguyá»…n VÄƒn A')).not.toBeInTheDocument()
-    expect(screen.getByText('Tráº§n Thá»‹ B')).toBeInTheDocument()
+    expect(screen.queryByText('Nguyễn Văn A')).not.toBeInTheDocument()
+    expect(screen.getByText('Trần Thị B')).toBeInTheDocument()
   })
 
   it('shows an error message when loading fails', async () => {
@@ -88,27 +88,27 @@ describe('AdminDashboard', () => {
     renderDashboard()
 
     await waitFor(() =>
-      expect(screen.getByText('KhÃ´ng táº£i Ä‘Æ°á»£c danh sÃ¡ch khÃ¡ch má»i.')).toBeInTheDocument()
+      expect(screen.getByText('Không tải được danh sách khách mời.')).toBeInTheDocument()
     )
   })
 
-  it('opens the add-guest modal as a popup when "ThÃªm khÃ¡ch má»i" is clicked', async () => {
+  it('opens the add-guest modal as a popup when "Thêm khách mới" is clicked', async () => {
     mockGuestsOnly()
     const user = userEvent.setup()
 
     renderDashboard()
 
-    await screen.findByText('Nguyá»…n VÄƒn A')
-    await user.click(screen.getByRole('button', { name: 'ThÃªm khÃ¡ch má»i' }))
+    await screen.findByText('Nguyễn Văn A')
+    await user.click(screen.getByRole('button', { name: 'Thêm khách mới' }))
 
-    expect(screen.getByRole('dialog', { name: 'ThÃªm khÃ¡ch má»i' })).toBeInTheDocument()
-    expect(screen.getByLabelText('TÃªn khÃ¡ch')).toHaveValue('')
+    expect(screen.getByRole('dialog', { name: 'Thêm khách mới' })).toBeInTheDocument()
+    expect(screen.getByLabelText('Tên khách')).toHaveValue('')
   })
 
-  it('opens the edit-guest modal pre-filled when a row Sá»­a button is clicked', async () => {
+  it('opens the edit-guest modal pre-filled when a row Sửa button is clicked', async () => {
     const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
     // First call is the dashboard's initial guest list load; every call after
-    // that is the modal's single-guest lookup by id when "Sá»­a" is clicked.
+    // that is the modal's single-guest lookup by id when "Sửa" is clicked.
     fromMock
       .mockImplementationOnce(() => createQueryBuilderMock({ data: guests, error: null }))
       .mockImplementation(() => createQueryBuilderMock({ data: guests[0], error: null }))
@@ -116,16 +116,16 @@ describe('AdminDashboard', () => {
 
     renderDashboard()
 
-    await screen.findByText('Nguyá»…n VÄƒn A')
-    const row = screen.getByText('Nguyá»…n VÄƒn A').closest('tr')
+    await screen.findByText('Nguyễn Văn A')
+    const row = screen.getByText('Nguyễn Văn A').closest('tr')
     if (!row) throw new Error('row not found')
-    await user.click(within(row).getByRole('button', { name: 'Sá»­a' }))
+    await user.click(within(row).getByRole('button', { name: 'Sửa' }))
 
-    expect(await screen.findByRole('dialog', { name: 'Sá»­a khÃ¡ch má»i' })).toBeInTheDocument()
-    expect(screen.getByDisplayValue('Nguyá»…n VÄƒn A')).toBeInTheDocument()
+    expect(await screen.findByRole('dialog', { name: 'Sửa khách mời' })).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Nguyễn Văn A')).toBeInTheDocument()
   })
 
-  it('opens the event settings modal when "Sá»­a thÃ´ng tin sá»± kiá»‡n" is clicked', async () => {
+  it('opens the event settings modal when "Sửa thông tin sự kiện" is clicked', async () => {
     const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
     fromMock.mockImplementation((table: string) => {
       if (table === 'guests') return createQueryBuilderMock({ data: guests, error: null })
@@ -133,7 +133,7 @@ describe('AdminDashboard', () => {
         return createQueryBuilderMock({
           data: {
             id: 1,
-            event_name: 'Lá»… tá»‘t nghiá»‡p',
+            event_name: 'Lễ tốt nghiệp',
             event_datetime: null,
             venue_name: '',
             venue_address: '',
@@ -149,13 +149,13 @@ describe('AdminDashboard', () => {
 
     renderDashboard()
 
-    await screen.findByText('Nguyá»…n VÄƒn A')
-    await user.click(screen.getByRole('button', { name: 'Sá»­a thÃ´ng tin sá»± kiá»‡n' }))
+    await screen.findByText('Nguyễn Văn A')
+    await user.click(screen.getByRole('button', { name: 'Sửa thông tin sự kiện' }))
 
     expect(
-      await screen.findByRole('dialog', { name: 'Sá»­a thÃ´ng tin sá»± kiá»‡n' })
+      await screen.findByRole('dialog', { name: 'Sửa thông tin sự kiện' })
     ).toBeInTheDocument()
-    expect(await screen.findByDisplayValue('Lá»… tá»‘t nghiá»‡p')).toBeInTheDocument()
+    expect(await screen.findByDisplayValue('Lễ tốt nghiệp')).toBeInTheDocument()
   })
 })
 

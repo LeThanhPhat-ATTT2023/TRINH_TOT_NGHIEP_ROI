@@ -168,14 +168,14 @@
   margin: 4px 0 0;
 }
 
-/* Khá»‘i Ä‘á»‹a Ä‘iá»ƒm + giá» háº¹n: tá»± co theo cá»¥m rá»™ng nháº¥t (tÃªn Ä‘á»‹a Ä‘iá»ƒm) vÃ  cÄƒn
-   giá»¯a thiá»‡p; hÃ ng giá»/ngÃ y bÃªn trong tráº£i Ä‘Ãºng báº±ng bá» rá»™ng khá»‘i */
+/* Khối địa điểm + giờ hẹn: tự co theo cụm rộng nhất (tên địa điểm) và căn
+   giữa thiệp; hàng giờ/ngày bên trong trải đúng bằng bề rộng khối */
 .public-invite-venue-block {
   width: fit-content;
   margin: 0 auto;
 }
 
-/* [icon Ä‘á»“ng há»“ + giá»] dÃ­nh mÃ©p trÃ¡i â€” [icon lá»‹ch + ngÃ y] dÃ­nh mÃ©p pháº£i */
+/* [icon đồng hồ + giờ] dính mép trái — [icon lịch + ngày] dính mép phải */
 .public-invite-time {
   display: flex;
   align-items: center;
@@ -184,16 +184,22 @@
   margin-top: var(--space-3);
 }
 
+/* Gap 12px = đúng gap của hàng địa điểm, để chữ "12:00" bắt đầu
+   thẳng cột với tên địa điểm phía trên */
 .public-invite-time-item {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
+/* Hộp icon 22px khớp hộp icon pin phía trên; glyph 18px vẽ trong content box
+   (padding 2px) nên tâm đồng hồ thẳng cột với tâm pin — hết lệch quang học */
 .public-invite-time-icon {
   flex-shrink: 0;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  box-sizing: border-box;
   color: var(--color-primary);
 }
 
@@ -218,7 +224,7 @@
   background: #be185d;
 }
 
-/* Mobile overrides â€” must stay at the end of the file to win the cascade */
+/* Mobile overrides — must stay at the end of the file to win the cascade */
 @media (max-width: 480px) {
   .public-invite-photo-tag {
     font-size: 0.78rem;

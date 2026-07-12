@@ -21,7 +21,7 @@ describe('HomePage', () => {
     render(<HomePage />)
 
     expect(
-      screen.getByText('Tìm tên của bạn trong danh sách khách mời')
+      screen.getByText('Vui lòng nhập tên của bạn❤️')
     ).toBeInTheDocument()
     expect(screen.getByText('NameSearchBox stub')).toBeInTheDocument()
   })

@@ -1,4 +1,4 @@
-﻿// src/components/EnvelopeModal.tsx
+// src/components/EnvelopeModal.tsx
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
 import type { EventSettings } from '../types/database'
@@ -11,6 +11,11 @@ import './EnvelopeModal.css'
 
 type EnvelopeState = 'envelope' | 'opening' | 'sliding' | 'revealed'
 type ViewState = 'card' | 'message' | 'complete'
+
+// Nhịp mở thư: nắp xoay 0.8s, thư trượt ra + bao thư mờ dần 1.3s.
+// Test đang advance 2200ms nên tổng phải giữ ≤ 2100ms.
+const FLAP_OPEN_MS = 800
+const REVEAL_AT_MS = 2100
 
 export interface EnvelopeModalProps {
   guestId: string
@@ -35,8 +40,8 @@ export function EnvelopeModal({ guestId, eventSettings, onClose }: EnvelopeModal
   const handleOpen = useCallback(() => {
     if (envelopeState !== 'envelope') return
     setEnvelopeState('opening')
-    setTimeout(() => setEnvelopeState('sliding'), 800)
-    setTimeout(() => setEnvelopeState('revealed'), 2100)
+    setTimeout(() => setEnvelopeState('sliding'), FLAP_OPEN_MS)
+    setTimeout(() => setEnvelopeState('revealed'), REVEAL_AT_MS)
   }, [envelopeState])
 
   useEffect(() => {
@@ -84,6 +89,8 @@ export function EnvelopeModal({ guestId, eventSettings, onClose }: EnvelopeModal
     setTimeout(() => onClose(), 1500)
   }
 
+  const salutation = guest?.salutation ? `${guest.salutation} ` : ''
+
   return (
     <motion.div
       ref={overlayRef}
@@ -111,41 +118,82 @@ export function EnvelopeModal({ guestId, eventSettings, onClose }: EnvelopeModal
           <button
             ref={envelopeRef}
             type="button"
-            className="envelope-container"
+            className="envelope-frame"
             data-state={envelopeState}
             onClick={handleOpen}
             aria-label="Chạm để mở thư"
           >
-            <div className="envelope-card-inside">
-              <div className="envelope-card-preview" />
-            </div>
+            <span className="env-float">
+              <span className="env-3d">
+                {/* Lưng bao thư (lòng bao tối hơn để tạo chiều sâu) */}
+                <span className="env-back" />
 
-            <div className="envelope-body">
-              <div className="envelope-back" />
-              <div className="envelope-fold" />
-              <SparkleIcon className="envelope-sparkle envelope-sparkle-1" />
-              <SparkleIcon className="envelope-sparkle envelope-sparkle-2" />
-            </div>
+                {/* Lá thư nằm giữa lưng bao và túi trước; trượt lên khi mở.
+                    layoutId cho phép nó morph thành thiệp đầy đủ lúc revealed. */}
+                <motion.span
+                  className="env-letter"
+                  layoutId="invite-letter"
+                  initial={false}
+                  animate={{ y: envelopeState === 'sliding' ? '-124%' : '0%' }}
+                  transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <span className="env-letter-inner">
+                    <GraduationCapIcon className="env-letter-cap" />
+                    <span className="env-letter-title">Thư mời lễ tốt nghiệp</span>
+                    {guest && (
+                      <span className="env-letter-name">
+                        {salutation}
+                        {guest.full_name}
+                      </span>
+                    )}
+                    <span className="env-letter-line" />
+                    <span className="env-letter-line env-letter-line-short" />
+                  </span>
+                </motion.span>
 
-            <div className="envelope-flap-wrapper">
-              <div className="envelope-flap" />
-            </div>
+                {/* Túi trước: hai mép gấp hông + mép đáy che phần dưới lá thư */}
+                <span className="env-pocket env-pocket-left" />
+                <span className="env-pocket env-pocket-right" />
+                <span className="env-pocket env-pocket-bottom" />
 
-            <div className="envelope-seal">
-              <div className="envelope-seal-circle">
-                <GraduationCapIcon className="envelope-seal-icon" />
-              </div>
-            </div>
+                {guest && (
+                  <span className="env-recipient">
+                    Gửi: {salutation}
+                    {guest.full_name}
+                  </span>
+                )}
+
+                {/* Nắp bao thư 2 mặt: mặt ngoài hồng đậm mang dấu niêm phong,
+                    mặt trong nhạt lộ ra sau khi nắp ngửa ra sau (rotateX âm) */}
+                <span className="env-flap">
+                  <span className="env-flap-face env-flap-face-front">
+                    <span className="env-flap-paper" />
+                    <span className="env-seal">
+                      <GraduationCapIcon className="env-seal-icon" />
+                    </span>
+                  </span>
+                  <span className="env-flap-face env-flap-face-back">
+                    <span className="env-flap-paper" />
+                  </span>
+                </span>
+
+                <SparkleIcon className="env-sparkle env-sparkle-1" />
+                <SparkleIcon className="env-sparkle env-sparkle-2" />
+              </span>
+            </span>
           </button>
 
-          {envelopeState === 'envelope' && <p className="envelope-hint">✨ Chạm để mở thư</p>}
+          <p
+            className={`envelope-hint${envelopeState === 'envelope' ? '' : ' envelope-hint-hidden'}`}
+          >
+            ✨ Chạm để mở thư
+          </p>
         </motion.div>
       ) : (
         <motion.div
           className="envelope-card-wrapper"
-          initial={{ y: -40, scale: 0.85, opacity: 0 }}
-          animate={{ y: 0, scale: 1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 160, damping: 20, mass: 1 }}
+          layoutId="invite-letter"
+          transition={{ layout: { type: 'spring', stiffness: 200, damping: 26 } }}
         >
           {loading && <p className="envelope-loading">Đang tải...</p>}
           {notFound && (
@@ -174,7 +222,9 @@ export function EnvelopeModal({ guestId, eventSettings, onClose }: EnvelopeModal
           )}
           {viewState === 'complete' && (
             <div className="envelope-complete">
-              <p className="envelope-complete-text">✓ Cảm ơn bạn!</p>
+              <p className="envelope-complete-text">
+                Sự hiện diện của bạn chính là món quà lớn nhất dành cho tui. Cảm ơn vì đã là một phần tuyệt vời trong hành trình trưởng thành của tui 😍✨
+              </p>
             </div>
           )}
         </motion.div>
@@ -182,5 +232,3 @@ export function EnvelopeModal({ guestId, eventSettings, onClose }: EnvelopeModal
     </motion.div>
   )
 }
-
-

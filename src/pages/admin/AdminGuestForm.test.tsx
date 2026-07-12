@@ -27,8 +27,8 @@ describe('AdminGuestForm', () => {
 
     render(<AdminGuestForm guestId={null} onClose={onClose} onSaved={onSaved} />)
 
-    await user.type(screen.getByLabelText('TÃªn khÃ¡ch'), 'LÃª VÄƒn C')
-    await user.click(screen.getByRole('button', { name: 'LÆ°u' }))
+    await user.type(screen.getByLabelText('Tên khách'), 'Lê Văn C')
+    await user.click(screen.getByRole('button', { name: 'Lưu' }))
 
     await waitFor(() => expect(onSaved).toHaveBeenCalledTimes(1))
     expect(fromMock).toHaveBeenCalledWith('guests')
@@ -40,9 +40,9 @@ describe('AdminGuestForm', () => {
       createQueryBuilderMock({
         data: {
           id: '1',
-          full_name: 'Nguyá»…n VÄƒn A',
+          full_name: 'Nguyễn Văn A',
           salutation: 'Anh',
-          greeting_message: 'ChÃºc má»«ng nhÃ©!',
+          greeting_message: 'Chúc mừng nhé!',
   message_by_guest: null,
           rsvp_status: 'pending',
           rsvp_responded_at: null,
@@ -55,17 +55,17 @@ describe('AdminGuestForm', () => {
 
     render(<AdminGuestForm guestId="1" onClose={onClose} onSaved={onSaved} />)
 
-    expect(await screen.findByDisplayValue('Nguyá»…n VÄƒn A')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('ChÃºc má»«ng nhÃ©!')).toBeInTheDocument()
+    expect(await screen.findByDisplayValue('Nguyễn Văn A')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Chúc mừng nhé!')).toBeInTheDocument()
   })
 
-  it('calls onClose when Huá»· is clicked', async () => {
+  it('calls onClose when Huỷ is clicked', async () => {
     const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
     fromMock.mockReturnValue(createQueryBuilderMock({ data: null, error: null }))
     const user = userEvent.setup()
 
     render(<AdminGuestForm guestId={null} onClose={onClose} onSaved={onSaved} />)
-    await user.click(screen.getByRole('button', { name: 'Huá»·' }))
+    await user.click(screen.getByRole('button', { name: 'Huỷ' }))
 
     expect(onClose).toHaveBeenCalledTimes(1)
   })

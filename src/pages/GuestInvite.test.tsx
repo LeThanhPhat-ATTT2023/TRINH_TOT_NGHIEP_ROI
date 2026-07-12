@@ -14,9 +14,9 @@ import { GuestInvite } from './GuestInvite'
 
 const guest = {
   id: '1',
-  full_name: 'Nguyá»…n VÄƒn A',
+  full_name: 'Nguyễn Văn A',
   salutation: 'Anh',
-  greeting_message: 'ChÃºc má»«ng nhÃ©!',
+  greeting_message: 'Chúc mừng nhé!',
   message_by_guest: null,
   rsvp_status: 'pending' as const,
   rsvp_responded_at: null,
@@ -26,10 +26,10 @@ const guest = {
 
 const eventSettings = {
   id: 1,
-  event_name: 'Lá»… tá»‘t nghiá»‡p',
+  event_name: 'Lễ tốt nghiệp',
   event_datetime: '2026-08-15T09:00:00Z',
-  venue_name: 'Há»™i trÆ°á»ng A',
-  venue_address: '123 ÄÆ°á»ng ABC',
+  venue_name: 'Hội trường A',
+  venue_address: '123 Đường ABC',
   map_embed_url: '',
   cover_image_url: null,
 }
@@ -54,9 +54,9 @@ describe('GuestInvite', () => {
 
     renderAt('/thiep/1')
 
-    expect(await screen.findByText('KÃ­nh má»i Anh Nguyá»…n VÄƒn A')).toBeInTheDocument()
-    expect(screen.getByText('ChÃºc má»«ng nhÃ©!')).toBeInTheDocument()
-    expect(screen.getByText('Lá»… tá»‘t nghiá»‡p')).toBeInTheDocument()
+    expect(await screen.findByText('Kính mời Anh Nguyễn Văn A')).toBeInTheDocument()
+    expect(screen.getByText('Chúc mừng nhé!')).toBeInTheDocument()
+    expect(screen.getByText('Lễ tốt nghiệp')).toBeInTheDocument()
   })
 
   it('shows a not-found message when the guest does not exist', async () => {
@@ -70,7 +70,7 @@ describe('GuestInvite', () => {
 
     renderAt('/thiep/missing')
 
-    expect(await screen.findByText('KhÃ´ng tÃ¬m tháº¥y thiá»‡p má»i nÃ y.')).toBeInTheDocument()
+    expect(await screen.findByText('Không tìm thấy thiệp mời này.')).toBeInTheDocument()
   })
 
   it('submits an RSVP response and updates the displayed status', async () => {
@@ -84,9 +84,9 @@ describe('GuestInvite', () => {
     const user = userEvent.setup()
 
     renderAt('/thiep/1')
-    await screen.findByText('KÃ­nh má»i Anh Nguyá»…n VÄƒn A')
+    await screen.findByText('Kính mời Anh Nguyễn Văn A')
 
-    await user.click(screen.getByRole('button', { name: 'TÃ´i sáº½ tham dá»±' }))
+    await user.click(screen.getByRole('button', { name: 'Tôi sẽ tham dự' }))
 
     await waitFor(() =>
       expect(rpcMock).toHaveBeenCalledWith('submit_rsvp', { guest_id: '1', status: 'attending' })
@@ -104,12 +104,12 @@ describe('GuestInvite', () => {
     const user = userEvent.setup()
 
     renderAt('/thiep/1')
-    await screen.findByText('KÃ­nh má»i Anh Nguyá»…n VÄƒn A')
+    await screen.findByText('Kính mời Anh Nguyễn Văn A')
 
-    await user.click(screen.getByRole('button', { name: 'TÃ´i sáº½ tham dá»±' }))
+    await user.click(screen.getByRole('button', { name: 'Tôi sẽ tham dự' }))
 
     expect(
-      await screen.findByText('Gá»­i pháº£n há»“i tháº¥t báº¡i, vui lÃ²ng thá»­ láº¡i.')
+      await screen.findByText('Gửi phản hồi thất bại, vui lòng thử lại.')
     ).toBeInTheDocument()
   })
 })

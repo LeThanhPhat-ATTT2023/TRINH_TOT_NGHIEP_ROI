@@ -52,8 +52,14 @@
   }
 }
 
-/* --- Cụm chữ kiểu banner: pill "Happy" → script "Graduation" → pill tên --- */
+/* --- Cụm chữ kiểu banner: pill "Happy" → script "Graduation" → pill tên ---
+   Mọi kích thước + độ lệch của 2 pill đều tính theo --hero-size (cỡ chữ
+   title) nên cả cụm scale như một khối ảnh: pill "Happy" luôn lọt đúng
+   khoảng trống giữa chữ "r" và nét móc chữ "d". Trước đây offset cố định
+   bằng rem và nhảy bậc ở breakpoint 480px trong khi title co theo vw,
+   nên pill lúc đúng hốc lúc đè lên chữ G. */
 .home-hero {
+  --hero-size: clamp(3.4rem, 16vw, 5rem);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -64,38 +70,34 @@
 .home-hero-pill {
   position: relative;
   z-index: 1;
-  padding: 0.4rem 1.1rem;
   background: #cd7fa5;
   color: #fff7fb;
   font-weight: 600;
-  font-size: 1rem;
   border-radius: 999px;
   box-shadow: 0 8px 16px -10px rgba(146, 46, 92, 0.6);
   white-space: nowrap;
 }
 
-/* Pill "Happy" nhỏ hơn pill tên (như mẫu), lọt vào khoảng trống giữa chữ "r"
-   và nét móc chữ "d" của "Graduation" — ngay trên chữ "a" */
 .home-hero-pill-happy {
-  margin-bottom: -2.4rem;
-  padding: 0.3rem 0.85rem;
-  font-size: 0.9rem;
-  transform: translateX(-3.6rem);
+  font-size: calc(var(--hero-size) * 0.18);
+  padding: 0.33em 0.95em;
+  margin-bottom: calc(var(--hero-size) * -0.34);
+  transform: translateX(calc(var(--hero-size) * -0.72));
 }
 
 .home-hero-pill-name {
-  margin-top: -1.1rem;
-  font-size: 1.3rem;
-  transform: translateX(2.6rem);
+  font-size: calc(var(--hero-size) * 0.26);
+  padding: 0.31em 0.85em;
+  margin-top: calc(var(--hero-size) * -0.22);
+  transform: translateX(calc(var(--hero-size) * 0.52));
   background: var(--color-primary);
-
 }
 
 .home-hero-title {
   margin: 0;
   font-family: var(--font-script);
   font-weight: 400;
-  font-size: clamp(3.4rem, 16vw, 5rem);
+  font-size: var(--hero-size);
   line-height: 1.2;
   letter-spacing: 0.05em;
   color: var(--color-foreground);
@@ -152,21 +154,3 @@
   color: var(--color-foreground);
 }
 
-@media (max-width: 480px) {
-  .home-hero-pill {
-    font-size: 0.9rem;
-    padding: 0.35rem 0.9rem;
-  }
-
-  .home-hero-pill-happy {
-    margin-bottom: -1.4rem;
-    padding: 0.25rem 0.7rem;
-    font-size: 0.8rem;
-    transform: translateX(-2.5rem);
-  }
-
-  .home-hero-pill-name {
-    font-size: 1.15rem;
-    transform: translateX(1.9rem);
-  }
-}
