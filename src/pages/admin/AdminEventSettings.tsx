@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 import { uploadImage } from '../../lib/cloudinary'
-import type { EventSettings, GalleryPhoto } from '../../types/database'
+import type { EventSettings, GalleryPhoto, MusicTrack } from '../../types/database'
+import { parseYoutubeId } from '../../lib/youtube'
 import { AvatarCropModal } from '../../components/AvatarCropModal'
 import '../../styles/admin-shared.css'
 import './AdminEventSettings.css'
@@ -40,6 +41,9 @@ export function AdminEventSettings() {
   const [uploadingCover, setUploadingCover] = useState(false)
   const [uploadingGallery, setUploadingGallery] = useState(false)
   const [coverCropFile, setCoverCropFile] = useState<File | null>(null)
+  const [musicTracks, setMusicTracks] = useState<MusicTrack[]>([])
+  const [newMusicUrl, setNewMusicUrl] = useState('')
+  const [musicUrlError, setMusicUrlError] = useState<string | null>(null)
 
   useEffect(() => {
     loadAll()
@@ -47,9 +51,10 @@ export function AdminEventSettings() {
 
   async function loadAll() {
     setLoading(true)
-    const [settingsRes, galleryRes] = await Promise.all([
+    const [settingsRes, galleryRes, musicRes] = await Promise.all([
       supabase.from('event_settings').select('*').eq('id', 1).single(),
       supabase.from('gallery_photos').select('*').order('sort_order', { ascending: true }),
+      supabase.from('music_tracks').select('*').order('sort_order', { ascending: true }),
     ])
 
     if (!settingsRes.error && settingsRes.data) {
@@ -57,6 +62,9 @@ export function AdminEventSettings() {
     }
     if (!galleryRes.error && galleryRes.data) {
       setGallery(galleryRes.data as GalleryPhoto[])
+    }
+    if (!musicRes.error && musicRes.data) {
+      setMusicTracks(musicRes.data as MusicTrack[])
     }
     setLoading(false)
   }
@@ -136,6 +144,32 @@ export function AdminEventSettings() {
     const { error } = await supabase.from('gallery_photos').delete().eq('id', id)
     if (!error) {
       setGallery((prev) => prev.filter((p) => p.id !== id))
+    }
+  }
+
+  async function handleAddMusicTrack(e: FormEvent) {
+    e.preventDefault()
+    setMusicUrlError(null)
+    if (!parseYoutubeId(newMusicUrl)) {
+      setMusicUrlError('Không nhận diện được link YouTube này.')
+      return
+    }
+    const { data, error } = await supabase
+      .from('music_tracks')
+      .insert({ youtube_url: newMusicUrl, sort_order: musicTracks.length })
+      .select()
+      .single()
+
+    if (!error && data) {
+      setMusicTracks((prev) => [...prev, data as MusicTrack])
+      setNewMusicUrl('')
+    }
+  }
+
+  async function handleDeleteMusicTrack(id: string) {
+    const { error } = await supabase.from('music_tracks').delete().eq('id', id)
+    if (!error) {
+      setMusicTracks((prev) => prev.filter((t) => t.id !== id))
     }
   }
 
@@ -224,6 +258,41 @@ export function AdminEventSettings() {
               <button
                 className="admin-button admin-button-danger"
                 onClick={() => handleGalleryDelete(photo.id)}
+              >
+                Xoá
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <h2 className="admin-section-title">Nhạc nền</h2>
+      <div className="admin-card">
+        <form className="admin-music-add-form" onSubmit={handleAddMusicTrack}>
+          <label className="admin-field">
+            Thêm link YouTube
+            <input
+              value={newMusicUrl}
+              onChange={(e) => setNewMusicUrl(e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=..."
+            />
+          </label>
+          <button className="admin-button admin-button-primary" type="submit">
+            Thêm
+          </button>
+        </form>
+        {musicUrlError && (
+          <p className="admin-error-banner" role="alert">
+            {musicUrlError}
+          </p>
+        )}
+        <ul className="admin-music-list">
+          {musicTracks.map((track) => (
+            <li key={track.id} className="admin-music-item">
+              <span className="admin-music-url">{track.youtube_url}</span>
+              <button
+                className="admin-button admin-button-danger"
+                onClick={() => handleDeleteMusicTrack(track.id)}
               >
                 Xoá
               </button>

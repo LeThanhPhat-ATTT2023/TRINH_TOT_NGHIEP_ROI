@@ -1,5 +1,6 @@
 // src/pages/HomePage.tsx
 import { InviteFrame } from '../components/InviteFrame'
+import { MusicPlayerWidget } from '../components/MusicPlayerWidget'
 import { NameSearchBox } from '../components/NameSearchBox'
 import { SparkleIcon } from '../components/icons'
 import { HOST_NAME } from '../lib/constants'
@@ -25,6 +26,7 @@ export function HomePage() {
             Cảm ơn vì đã là một phần rực rỡ trong những năm tháng thanh xuân của mình.
             Nhập tên để cùng mở ra tấm vé đến ngày lễ tốt nghiệp nhé!
           </p>
+          <MusicPlayerWidget />
         </div>
 
         <div className="home-search-section">

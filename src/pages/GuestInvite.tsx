@@ -2,6 +2,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { useGuestInvite } from '../hooks/useGuestInvite'
 import { GuestInviteCard } from '../components/GuestInviteCard'
+import { MusicPlayerWidget } from '../components/MusicPlayerWidget'
 import '../styles/tokens.css'
 import '../styles/public-shared.css'
 import './GuestInvite.css'
@@ -33,6 +34,7 @@ export function GuestInvite() {
         rsvpError={rsvpError}
         onRespond={respond}
       />
+      <MusicPlayerWidget variant="floating" />
     </div>
   )
 }

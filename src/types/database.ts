@@ -31,3 +31,10 @@ export interface GalleryPhoto {
   created_at: string
 }
 
+export interface MusicTrack {
+  id: string
+  youtube_url: string
+  sort_order: number
+  created_at: string
+}
+

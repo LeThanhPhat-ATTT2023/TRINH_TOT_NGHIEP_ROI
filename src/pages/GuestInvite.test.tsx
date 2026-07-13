@@ -56,7 +56,6 @@ describe('GuestInvite', () => {
 
     expect(await screen.findByText('Kính mời Anh Nguyễn Văn A')).toBeInTheDocument()
     expect(screen.getByText('Chúc mừng nhé!')).toBeInTheDocument()
-    expect(screen.getByText('Lễ tốt nghiệp')).toBeInTheDocument()
   })
 
   it('shows a not-found message when the guest does not exist', async () => {

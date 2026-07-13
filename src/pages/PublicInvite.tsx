@@ -16,6 +16,7 @@ import {
   SparkleIcon,
 } from '../components/icons'
 import { InviteFrame } from '../components/InviteFrame'
+import { MusicPlayerWidget } from '../components/MusicPlayerWidget'
 import { HOST_NAME } from '../lib/constants'
 import '../styles/tokens.css'
 import '../styles/public-shared.css'
@@ -156,6 +157,8 @@ export function PublicInvite() {
           </div>
         )}
       </InviteFrame>
+
+      <MusicPlayerWidget variant="floating" />
 
       <AnimatePresence>
         {guestId && inviteOpen && (

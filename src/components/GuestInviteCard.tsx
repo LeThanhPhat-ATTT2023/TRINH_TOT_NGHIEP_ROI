@@ -22,6 +22,9 @@ export function GuestInviteCard({ guest, submitting, rsvpError, onRespond }: Gue
       {guest.greeting_message && (
         <p className="guest-invite-message">{guest.greeting_message}</p>
       )}
+      <p className="guest-invite-note" style={{ fontSize: '0.8rem' }}>
+      Vì là ngày thường nên phòng hờ trước là mọi người sẽ bận nhìu nè.<br/> Nên xác nhận giúp chinh ở dưới để chinh sắp xếp thời gian và đợi mng tới nha.
+      </p>
       <RsvpButtons status={guest.rsvp_status} submitting={submitting} onRespond={onRespond} />
       {rsvpError && (
         <p className="guest-invite-rsvp-error" role="alert">

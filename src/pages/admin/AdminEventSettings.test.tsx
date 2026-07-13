@@ -101,4 +101,59 @@ describe('AdminEventSettings', () => {
       'https://res.cloudinary.com/demo/cover.jpg'
     ))
   })
+
+  it('adds a music link and can delete it', async () => {
+    const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
+    const newTrack = {
+      id: 'm1',
+      youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      sort_order: 0,
+      created_at: '2026-01-01T00:00:00Z',
+    }
+    fromMock.mockImplementation((table: string) => {
+      if (table === 'event_settings') {
+        return createQueryBuilderMock({ data: eventSettings, error: null })
+      }
+      return createQueryBuilderMock({ data: [], error: null })
+    })
+    const user = userEvent.setup()
+
+    renderComponent()
+    await screen.findByDisplayValue('Lễ tốt nghiệp')
+
+    fromMock.mockImplementationOnce(() => createQueryBuilderMock({ data: newTrack, error: null }))
+
+    const input = screen.getByLabelText('Thêm link YouTube')
+    await user.type(input, newTrack.youtube_url)
+    await user.click(screen.getByRole('button', { name: 'Thêm' }))
+
+    expect(await screen.findByText(newTrack.youtube_url)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: 'Xoá' }))
+    await waitFor(() =>
+      expect(screen.queryByText(newTrack.youtube_url)).not.toBeInTheDocument()
+    )
+  })
+
+  it('shows an error and does not insert when the music link is not a valid YouTube URL', async () => {
+    const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
+    fromMock.mockImplementation((table: string) => {
+      if (table === 'event_settings') {
+        return createQueryBuilderMock({ data: eventSettings, error: null })
+      }
+      return createQueryBuilderMock({ data: [], error: null })
+    })
+    const user = userEvent.setup()
+
+    renderComponent()
+    await screen.findByDisplayValue('Lễ tốt nghiệp')
+
+    const input = screen.getByLabelText('Thêm link YouTube')
+    await user.type(input, 'not a youtube link')
+    await user.click(screen.getByRole('button', { name: 'Thêm' }))
+
+    expect(
+      await screen.findByText('Không nhận diện được link YouTube này.')
+    ).toBeInTheDocument()
+  })
 })
