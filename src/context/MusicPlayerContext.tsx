@@ -37,6 +37,7 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   const [videoIds, setVideoIds] = useState<string[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [autoplayNext, setAutoplayNext] = useState(false)
   const playerRef = useRef<YouTubePlayer | null>(null)
   const startedRef = useRef(false)
 
@@ -61,6 +62,7 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     function handleFirstInteraction() {
       startedRef.current = true
+      setAutoplayNext(true)
       playerRef.current?.playVideo()
     }
     // Listen for 'click' rather than 'pointerdown': browsers only treat a
@@ -79,9 +81,11 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
 
   const togglePlay = useCallback(() => {
     if (isPlaying) {
+      setAutoplayNext(false)
       playerRef.current?.pauseVideo()
     } else {
       startedRef.current = true
+      setAutoplayNext(true)
       playerRef.current?.playVideo()
     }
   }, [isPlaying])
@@ -122,7 +126,7 @@ export function MusicPlayerProvider({ children }: { children: ReactNode }) {
         <div style={hiddenPlayerStyle} aria-hidden="true">
           <YouTube
             videoId={videoIds[currentIndex]}
-            opts={{ playerVars: { autoplay: 0, controls: 0 } }}
+            opts={{ playerVars: { autoplay: autoplayNext ? 1 : 0, controls: 0 } }}
             onReady={handleReady}
             onStateChange={handleStateChange}
             onEnd={next}

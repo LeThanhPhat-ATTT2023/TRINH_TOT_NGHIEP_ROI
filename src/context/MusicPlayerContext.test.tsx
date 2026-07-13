@@ -14,8 +14,10 @@ vi.mock('../lib/supabaseClient', () => ({
 // `const`s are initialized (Vitest hoists vi.mock calls above imports), so
 // referencing an outer variable here would hit a temporal-dead-zone error.
 vi.mock('react-youtube', async () => {
-  const { useEffect } = await import('react')
+  const { useEffect, useRef } = await import('react')
   function MockYouTube(props: {
+    videoId?: string
+    opts?: { playerVars?: { autoplay?: number } }
     onReady?: (event: { target: unknown }) => void
     onStateChange?: (event: { data: number }) => void
   }) {
@@ -31,6 +33,21 @@ vi.mock('react-youtube', async () => {
       props.onReady?.({ target: player })
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+    // Mirrors the real react-youtube's `updateVideo()`: whenever the videoId
+    // prop changes (next/prev/onEnd), it calls loadVideoById (autoplay ->
+    // fires PLAYING) if opts.playerVars.autoplay is 1, otherwise cueVideoById
+    // (fires CUED, i.e. loaded but paused). Skipped on the initial mount,
+    // which the `onReady` effect above already covers.
+    const mountedRef = useRef(false)
+    useEffect(() => {
+      if (!mountedRef.current) {
+        mountedRef.current = true
+        return
+      }
+      const autoplay = props.opts?.playerVars?.autoplay === 1
+      props.onStateChange?.({ data: autoplay ? 1 : 5 })
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [props.videoId])
     return null
   }
   MockYouTube.PlayerState = { UNSTARTED: -1, ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3, CUED: 5 }
@@ -108,6 +125,53 @@ describe('MusicPlayerProvider', () => {
 
     await user.click(screen.getByText('toggle'))
     expect(await screen.findByText('isPlaying:false')).toBeInTheDocument()
+  })
+
+  it('keeps playing the next track automatically when next is clicked while playing', async () => {
+    const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
+    fromMock.mockImplementation(() => createQueryBuilderMock({ data: tracks, error: null }))
+    const user = userEvent.setup()
+
+    render(
+      <MusicPlayerProvider>
+        <Consumer />
+      </MusicPlayerProvider>
+    )
+    await screen.findByText('hasTracks:true')
+
+    await user.click(screen.getByText('toggle'))
+    expect(await screen.findByText('isPlaying:true')).toBeInTheDocument()
+
+    // onEnd (auto-advance when a track finishes) calls this same `next`
+    // callback, so this also covers the "song ends -> next one auto-plays"
+    // path without needing a separate onEnd simulation.
+    await user.click(screen.getByText('next'))
+    expect(await screen.findByText('isPlaying:true')).toBeInTheDocument()
+  })
+
+  it('does not force playback when next is clicked while paused', async () => {
+    const fromMock = supabase.from as unknown as ReturnType<typeof vi.fn>
+    fromMock.mockImplementation(() => createQueryBuilderMock({ data: tracks, error: null }))
+    const user = userEvent.setup()
+
+    render(
+      <MusicPlayerProvider>
+        <Consumer />
+      </MusicPlayerProvider>
+    )
+    await screen.findByText('hasTracks:true')
+
+    // Start, then explicitly pause, so this exercises a real "paused after
+    // playing" state rather than the page's very first click (which is its
+    // own autoplay-unlock gesture and would start playback regardless of
+    // which button it lands on).
+    await user.click(screen.getByText('toggle'))
+    expect(await screen.findByText('isPlaying:true')).toBeInTheDocument()
+    await user.click(screen.getByText('toggle'))
+    expect(await screen.findByText('isPlaying:false')).toBeInTheDocument()
+
+    await user.click(screen.getByText('next'))
+    expect(screen.getByText('isPlaying:false')).toBeInTheDocument()
   })
 
   it('stays at hasTracks false when the playlist is empty', async () => {
