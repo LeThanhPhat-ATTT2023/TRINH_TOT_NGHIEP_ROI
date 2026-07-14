@@ -99,6 +99,11 @@
   color: var(--color-foreground);
 }
 
+.admin-rsvp-maybe {
+  background: #fef3c7;
+  color: #92400e;
+}
+
 /* ── Message cell styles ── */
 .admin-message-empty {
   color: #9ca3af;
