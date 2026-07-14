@@ -23,8 +23,8 @@ const guests: Guest[] = [
     full_name: 'Nguyễn Văn A',
     salutation: 'Anh',
     greeting_message: null,
-  message_by_guest: null,
-  rsvp_status: 'attending',
+    message_by_guest: null,
+    rsvp_status: 'attending',
     rsvp_responded_at: '2026-07-01T00:00:00Z',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
@@ -34,9 +34,20 @@ const guests: Guest[] = [
     full_name: 'Trần Thị B',
     salutation: 'Chị',
     greeting_message: null,
-  message_by_guest: null,
-  rsvp_status: 'pending',
+    message_by_guest: null,
+    rsvp_status: 'pending',
     rsvp_responded_at: null,
+    created_at: '2026-01-01T00:00:00Z',
+    updated_at: '2026-01-01T00:00:00Z',
+  },
+  {
+    id: '3',
+    full_name: 'Lê Văn C',
+    salutation: 'Anh',
+    greeting_message: null,
+    message_by_guest: null,
+    rsvp_status: 'maybe',
+    rsvp_responded_at: '2026-07-02T00:00:00Z',
     created_at: '2026-01-01T00:00:00Z',
     updated_at: '2026-01-01T00:00:00Z',
   },
@@ -64,8 +75,10 @@ describe('AdminDashboard', () => {
 
     expect(await screen.findByText('Nguyễn Văn A')).toBeInTheDocument()
     expect(screen.getByText('Trần Thị B')).toBeInTheDocument()
-    expect(screen.getByText('Tổng số: 2')).toBeInTheDocument()
+    expect(screen.getByText('Lê Văn C')).toBeInTheDocument()
+    expect(screen.getByText('Tổng số: 3')).toBeInTheDocument()
     expect(screen.getByText('Đã xác nhận: 1')).toBeInTheDocument()
+    expect(screen.getByText('Để sau: 1')).toBeInTheDocument()
   })
 
   it('filters guests by the search box', async () => {

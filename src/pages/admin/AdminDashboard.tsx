@@ -88,6 +88,7 @@ export function AdminDashboard() {
     attending: guests.filter((g) => g.rsvp_status === 'attending').length,
     notAttending: guests.filter((g) => g.rsvp_status === 'not_attending').length,
     pending: guests.filter((g) => g.rsvp_status === 'pending').length,
+    maybe: guests.filter((g) => g.rsvp_status === 'maybe').length,
   }
 
   if (loading) {
@@ -116,7 +117,8 @@ export function AdminDashboard() {
         <span className="admin-summary-chip">Tổng số: {counts.total}</span>{' '}
         <span className="admin-summary-chip">Đã xác nhận: {counts.attending}</span>{' '}
         <span className="admin-summary-chip">Từ chối: {counts.notAttending}</span>{' '}
-        <span className="admin-summary-chip">Chưa phản hồi: {counts.pending}</span>
+        <span className="admin-summary-chip">Chưa phản hồi: {counts.pending}</span>{' '}
+        <span className="admin-summary-chip">Để sau: {counts.maybe}</span>
       </div>
 
       <div className="admin-dashboard-actions">
