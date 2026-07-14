@@ -16,12 +16,16 @@ describe('RsvpButtons', () => {
 
     await user.click(screen.getByRole('button', { name: 'Xin phép vắng mặt' }))
     expect(onRespond).toHaveBeenCalledWith('not_attending')
+
+    await user.click(screen.getByRole('button', { name: 'Để sau' }))
+    expect(onRespond).toHaveBeenCalledWith('maybe')
   })
 
-  it('disables both buttons while submitting', () => {
+  it('disables all three buttons while submitting', () => {
     render(<RsvpButtons status="pending" submitting onRespond={vi.fn()} />)
     expect(screen.getByRole('button', { name: 'Tôi sẽ tham dự' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Xin phép vắng mặt' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Để sau' })).toBeDisabled()
   })
 
   it('marks the current status as active', () => {
@@ -29,5 +33,10 @@ describe('RsvpButtons', () => {
     expect(screen.getByRole('button', { name: 'Tôi sẽ tham dự' })).toHaveClass(
       'rsvp-button-active'
     )
+  })
+
+  it('marks "Để sau" as active when status is maybe', () => {
+    render(<RsvpButtons status="maybe" submitting={false} onRespond={vi.fn()} />)
+    expect(screen.getByRole('button', { name: 'Để sau' })).toHaveClass('rsvp-button-active')
   })
 })

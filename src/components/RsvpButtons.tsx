@@ -5,7 +5,7 @@ import './RsvpButtons.css'
 export interface RsvpButtonsProps {
   status: RsvpStatus
   submitting: boolean
-  onRespond: (status: 'attending' | 'not_attending') => void
+  onRespond: (status: 'attending' | 'not_attending' | 'maybe') => void
 }
 
 export function RsvpButtons({ status, submitting, onRespond }: RsvpButtonsProps) {
@@ -32,6 +32,17 @@ export function RsvpButtons({ status, submitting, onRespond }: RsvpButtonsProps)
         aria-pressed={status === 'not_attending'}
       >
         Xin phép vắng mặt
+      </button>
+      <button
+        type="button"
+        className={`rsvp-button rsvp-button-maybe${
+          status === 'maybe' ? ' rsvp-button-active' : ''
+        }`}
+        onClick={() => onRespond('maybe')}
+        disabled={submitting}
+        aria-pressed={status === 'maybe'}
+      >
+        Để sau
       </button>
     </div>
   )
