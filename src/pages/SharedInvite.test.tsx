@@ -75,7 +75,7 @@ describe('SharedInvite', () => {
     ).toBeInTheDocument()
   })
 
-  it('opens the generic PublicEnvelopeModal from the CTA', async () => {
+  it('opens the generic PublicEnvelopeModal from the CTA and shows the real fetched message', async () => {
     mockLoadSuccess()
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime })
     render(<SharedInvite />)
@@ -87,7 +87,13 @@ describe('SharedInvite', () => {
     )
 
     expect(await screen.findByRole('dialog')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Chạm để mở thư' })).toBeInTheDocument()
+    const envelopeButton = screen.getByRole('button', { name: 'Chạm để mở thư' })
+    expect(envelopeButton).toBeInTheDocument()
+
+    await user.click(envelopeButton)
+    await vi.advanceTimersByTimeAsync(2200)
+
+    expect(await screen.findByText(eventSettings.public_invite_message)).toBeInTheDocument()
   })
 
   it('resets to the gate on a fresh mount (no persistence across reloads)', () => {
